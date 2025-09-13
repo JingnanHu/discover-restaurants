@@ -1,0 +1,100 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto; /* center horizontally */
+  padding: 20px;
+}
+
+/* Center only the header */
+.header {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Restaurant list */
+.restaurant-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.restaurant-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.restaurant-header {
+  display: flex;
+  justify-content: space-between; /* name left, rating right */
+  align-items: center;           /* vertical alignment */
+}
+
+/* .restaurant-header h3 {
+  margin: 0;  
+}
+
+.restaurant-header p {
+  margin: 0;
+} */
+
+.restaurant-address {
+  margin: 4px 0 0 0;
+  color: #555;
+}
+
+/* Modal overlay: dark transparent background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;   /* full viewport width */
+  height: 100vh;  /* full viewport height */
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;  /* ensure it is on top */
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.restaurant-item {
+  display: flex;
+  align-items: center;      /* vertically center the image and info */
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  gap: 10px;                /* space between image and info */
+}
+
+.restaurant-item img {
+  width: 92px;
+  height: 92px;
+  border-radius: 8px;
+  object-fit: cover;        /* maintain aspect ratio, crop if necessary */
+  flex-shrink: 0;           /* prevent image from shrinking */
+}
+
+.restaurant-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;                  /* take remaining space */
+}
+
+.restaurant-info h3 {
+  margin: 0;
+}
+
+.restaurant-info p {
+  margin: 4px 0;            /* spacing between lines */
+}
+
+
