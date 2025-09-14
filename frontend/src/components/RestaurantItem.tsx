@@ -3,13 +3,20 @@ import type { Restaurant } from "../types";
 interface Props {
   restaurant: Restaurant;
   onSelect: (restaurant: Restaurant) => void;
+  onHover: (restaurant: Restaurant | null) => void;
+  isHovered: boolean;
 }
 
-export default function RestaurantItem({ restaurant, onSelect }: Props) {
+export default function RestaurantItem({ restaurant, onSelect, onHover, isHovered }: Props) {
   const priceLabels = ["Free", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
 
   return (
-    <li className="restaurant-item" onClick={() => onSelect(restaurant)}>
+    <li 
+      className={`restaurant-item ${isHovered ? 'hovered' : ''}`}
+      onClick={() => onSelect(restaurant)}
+      onMouseEnter={() => onHover(restaurant)}
+      onMouseLeave={() => onHover(null)}
+    >
       {restaurant.photo && (
           <img
             src={restaurant.photo}

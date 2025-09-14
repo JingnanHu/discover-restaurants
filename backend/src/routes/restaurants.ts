@@ -8,7 +8,7 @@ export async function restaurantRoutes(fastify: FastifyInstance) {
   
   fastify.get("/restaurants", async (request, reply) => {
     try {
-      const { lat, lng } = request.query as { lat?: string; lng?: string };
+      const { lat, lng, radius } = request.query as { lat?: string; lng?: string; radius?: string };
 
       // Use query values if provided, otherwise fallback to default
       if (!lat || !lng) {
@@ -18,7 +18,8 @@ export async function restaurantRoutes(fastify: FastifyInstance) {
 
       const latitude = parseFloat(lat);
       const longitude = parseFloat(lng);
-      const restaurants = await fetchRestaurants(latitude, longitude);
+      const searchRadius = radius ? parseInt(radius) : 2000;
+      const restaurants = await fetchRestaurants(latitude, longitude, searchRadius);
       return restaurants;
     } catch (err) {
       reply.status(500).send({ error: "Failed to fetch restaurants" });

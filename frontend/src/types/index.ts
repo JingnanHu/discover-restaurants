@@ -8,6 +8,10 @@ export interface Restaurant {
     website?: string;
     opening_hours?: string[];
     types?: string[];
+    location: {
+      lat: number;
+      lng: number;
+    };
     cuisineType?: string; 
     price: number;
     ratingNumber: number;

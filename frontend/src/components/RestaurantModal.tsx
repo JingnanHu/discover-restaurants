@@ -4,36 +4,47 @@ interface Props {
   restaurant: Restaurant;
   onClose: () => void;
 }
-
+const priceLabels = ["Free", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
 export default function RestaurantModal({ restaurant, onClose }: Props) {
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        {restaurant.photo && (
-          <img
-            src={restaurant.photo}
-            alt={restaurant.name}
-            style={{ width: "100%", borderRadius: "8px", marginBottom: "10px" }}
-          />
-        )}
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      {/* 顶部图片 + 关闭按钮 */}
+  
+      <div className="modal-body">
         <h2>{restaurant.name}</h2>
-        <p>⭐ {restaurant.rating}</p>
-        <p>{restaurant.address}</p>
-        {restaurant.phone && <p>Phone: {restaurant.phone}</p>}
+        <p className="restaurant-rating">
+          ⭐ {restaurant.rating} {priceLabels[restaurant.price]}
+        </p>
+        <p className="restaurant-address">{restaurant.address}</p>
+        {restaurant.photo && (
+        <div className="modal-header">
+          <img src={restaurant.photo} alt={restaurant.name} />
+        </div>
+      )}
+        {restaurant.phone && <p>📞 {restaurant.phone}</p>}
         {restaurant.website && (
           <p>
-            Website: <a href={restaurant.website}>{restaurant.website}</a>
+            🌐 <a href={restaurant.website} target="_blank" rel="noopener noreferrer">{restaurant.website}</a>
           </p>
         )}
+  
         {restaurant.opening_hours && (
-          <ul>
-            {restaurant.opening_hours.map((h, idx) => (
-              <li key={idx}>{h}</li>
-            ))}
-          </ul>
+          <div className="opening-hours">
+            <h3>Opening Hours</h3>
+            <ul>
+              {restaurant.opening_hours.map((h, idx) => (
+                <li key={idx}>{h}</li>
+              ))}
+            </ul>
+          </div>
         )}
-        <button onClick={onClose}>Close</button>
+  
+        <div className="modal-footer">
+          <button onClick={onClose}>Close</button>
+        </div>
       </div>
     </div>
+  </div>  
   );
 }
