@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function RestaurantItem({ restaurant, onSelect, onHover, isHovered }: Props) {
-  const priceLabels = ["Free", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
+  const priceLabels = ["Unknown Price", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
 
   return (
     <li 

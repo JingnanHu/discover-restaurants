@@ -4,13 +4,11 @@ interface Props {
   restaurant: Restaurant;
   onClose: () => void;
 }
-const priceLabels = ["Free", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
+const priceLabels = ["Unknown Price", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
 export default function RestaurantModal({ restaurant, onClose }: Props) {
   return (
     <div className="modal-overlay" onClick={onClose}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      {/* 顶部图片 + 关闭按钮 */}
-  
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>  
       <div className="modal-body">
         <h2>{restaurant.name}</h2>
         <p className="restaurant-rating">

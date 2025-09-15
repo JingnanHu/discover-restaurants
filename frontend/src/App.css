@@ -1,16 +1,10 @@
 .container {
   display: flex;
-  /* gap: 16px;
-  padding: 20px; */
   height: 100vh;
 }
 
 .container .map {
   flex: 2;
-  /* height: 100%; */
-  /* border-radius: 8px; */
-  /* overflow: hidden; */
-  /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
 }
 
 .list {
@@ -18,37 +12,20 @@
   max-height: 100%;
   overflow-y: auto;
 }
-/* 
-@media (max-width: 768px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-} */
 
-/* ---------------------------
-   Header
----------------------------- */
 .list h1 {
   text-align: center;
-  /* font-size: 2rem; */
-  /* margin-bottom: 20px; */
 }
 
-/* ---------------------------
-   Filters
----------------------------- */
 .filters {
   background: #f8f9fa;
   padding: 24px;
-  /* border-radius: 12px; */
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .filter-panel h3 {
   margin: 0 0 24px 0;
   text-align: center;
-  /* color: #333;
-  font-size: 1.5rem; */
 }
 
 .filter-group {
@@ -59,7 +36,6 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  /* color: #555; */
 }
 
 .filter-group select {
@@ -77,11 +53,7 @@
   border-color: #4285f4;
 }
 
-/* ---------------------------
-   Restaurant List
----------------------------- */
 .restaurant-list {
-  /* list-style: none; */
   padding: 0;
   margin: 0;
 }
@@ -98,7 +70,6 @@
 
 .restaurant-item:hover {
   background-color: #f2f0f0;
-  /* border-radius: 8px; */
 }
 
 .restaurant-item img {
@@ -106,7 +77,6 @@
   height: 92px;
   border-radius: 8px;
   object-fit: cover;
-  /* flex-shrink: 0; */
 }
 
 .restaurant-info {
@@ -114,10 +84,6 @@
   flex-direction: column;
   flex: 1;
 }
-
-/* .restaurant-info h3 {
-  margin: 0;
-} */
 
 .restaurant-info p {
   margin: 4px 0;
@@ -134,9 +100,6 @@
   color: #555;
 }
 
-/* ---------------------------
-   Modal
----------------------------- */
 .modal-overlay {
   position: fixed;
   inset: 0;

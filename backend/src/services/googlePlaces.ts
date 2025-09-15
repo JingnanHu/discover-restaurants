@@ -5,25 +5,20 @@ const apiKey = process.env.GOOGLE_API_KEY;
 
 export async function fetchRestaurants(lat: number, lng: number, radius = 2000) {
   const url = `${BASE_URL}/nearbysearch/json`;
-  const params = {
-    location: `${lat},${lng}`,
-    radius,
-    type: "restaurant",
-    key: apiKey,
-  };
-  const responses = await axios.get(url, { params });
-  return responses.data.results.map((response: any) => ({
-    id: response.place_id,
-    name: response.name,
-    address: response.vicinity,
-    rating: response.rating,
-    types: response.types,
-    price : response.price_level,
-    ratingNumber: response.user_ratings_total,
-    location: response.geometry.location,
-    photo: response.photos?.length
-    ? `${BASE_URL}/photo?maxwidth=400&photoreference=${response.photos[0].photo_reference}&key=${apiKey}`
-    : null,
+  const params = { location: `${lat},${lng}`, radius, type: "restaurant", key: apiKey } as const;
+  const response = await axios.get(url, { params });
+  const results = response.data?.results ?? [];
+  return results.map((place: any) => ({
+    id: place.place_id,
+    name: place.name,
+    address: place.vicinity,
+    rating: place.rating ?? 0,
+    price: place.price_level ?? 0,
+    ratingNumber: place.user_ratings_total ?? 0,
+    location: place.geometry?.location,
+    photo: place.photos?.length
+      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
+      : null,
   }));
 }
 
@@ -32,27 +27,25 @@ export async function fetchRestaurantDetails(placeId: string) {
   const params = {
     place_id: placeId,
     key: apiKey,
-    fields: "place_id,name,rating,price_level,formatted_phone_number,formatted_address,opening_hours,website,photos,types,geometry",
+    fields:
+      "place_id,name,rating,price_level,formatted_phone_number,formatted_address,opening_hours,website,photos,types,geometry",
+  } as const;
 
-  };
-
-  const responses = await axios.get(url, { params });
-  const response = responses.data.result;
-  console.log(response.photos)
+  const response = await axios.get(url, { params });
+  const result = response.data?.result ?? {};
   return {
     id: placeId,
-    name: response.name,
-    rating: response.rating,
-    phone: response.formatted_phone_number,
-    address: response.formatted_address,
-    opening_hours: response.opening_hours?.weekday_text,
-    website: response.website,
-    types: response.types,
-    price : response.price_level,
-    ratingNumber: response.user_ratings_total || 0,
-    location: response.geometry.location,
-    photo: response.photos?.length
-      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${response.photos[0].photo_reference}&key=${apiKey}`
+    name: result.name,
+    rating: result.rating ?? 0,
+    phone: result.formatted_phone_number,
+    address: result.formatted_address,
+    opening_hours: result.opening_hours?.weekday_text,
+    website: result.website,
+    price: result.price_level ?? 0,
+    ratingNumber: result.user_ratings_total ?? 0,
+    location: result.geometry?.location,
+    photo: result.photos?.length
+      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${apiKey}`
       : null,
   };
 }
