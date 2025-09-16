@@ -1,5 +1,5 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import type { Restaurant } from "../types";
+import type { Restaurant } from "../types/restaurant";
 
 const mapContainerStyle = {
   width: "100%",

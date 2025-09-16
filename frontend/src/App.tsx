@@ -3,7 +3,7 @@ import RestaurantList from "./components/RestaurantList";
 import RestaurantModal from "./components/RestaurantModal";
 import FilterPanel from "./components/FilterPanel";
 import type { FilterOptions } from "./components/FilterPanel";
-import type { Restaurant } from "./types";
+import type { Restaurant } from "./types/restaurant";
 import Map from "./components/RestaurantMap";
 import "./App.css";
 

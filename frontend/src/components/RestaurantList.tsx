@@ -1,4 +1,4 @@
-import type { Restaurant } from "../types";
+import type { Restaurant } from "../types/restaurant";
 import RestaurantItem from "./RestaurantItem";
 
 interface Props {
