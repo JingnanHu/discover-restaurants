@@ -1,4 +1,34 @@
-import { useEffect, useState } from "react";
+/**
+ * Restaurant Discovery App - Main Component
+ * 
+ * This is the main React component for the restaurant discovery application.
+ * It manages the application state and coordinates between different components.
+ * 
+ * Features:
+ * - Geolocation-based restaurant discovery
+ * - Interactive map with restaurant markers
+ * - Restaurant list with filtering and sorting
+ * - Detailed restaurant modal with contact information
+ * - Real-time hover effects between map and list
+ * 
+ * State Management:
+ * - restaurants: Array of nearby restaurants
+ * - selectedRestaurant: Currently selected restaurant for modal display
+ * - hoveredRestaurant: Restaurant being hovered for visual feedback
+ * - currentPosition: User's current location coordinates
+ * - filters: Filter options (rating sort, price filter, radius)
+ * - loading/error: UI state management
+ * 
+ * API Integration:
+ * - Fetches nearby restaurants based on user location
+ * - Fetches detailed restaurant information on demand
+ * - Handles API errors gracefully with fallbacks
+ * 
+ * @author Jingnan Hu
+ * @version 1.0.0
+ */
+
+import { useEffect, useMemo, useState } from "react";
 import RestaurantList from "./components/RestaurantList";
 import RestaurantModal from "./components/RestaurantModal";
 import FilterPanel from "./components/FilterPanel";
@@ -9,125 +39,74 @@ import "./App.css";
 
 export default function App() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPosition, setCurrentPosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [filters, setFilters] = useState<FilterOptions>({
-    ratingSort: 'highest',
-    priceFilter: null,
-    radius: 2000
-  });
+  const [filters, setFilters] = useState<FilterOptions>({ ratingSort: 'highest', priceFilter: null, radius: 2000 });
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-  const fetchRestaurantsByLocation = async (lat: number, lng: number, radius: number = 2000) => {
-    try {
-      const res = await fetch(`http://localhost:3000/restaurants?lat=${lat}&lng=${lng}&radius=${radius}`);
-      const data = await res.json();
-      setRestaurants(data);
-      return data;
-    } catch (error) {
-      setError("Failed to fetch restaurants");
-      throw error;
-    }
+  const fetchRestaurants = async (lat: number, lng: number, radius: number) => {
+    const res = await fetch(`${API_URL}/restaurants?lat=${lat}&lng=${lng}&radius=${radius}`);
+    if (!res.ok) throw new Error(res.status === 400 ? "Invalid location" : "Failed to fetch restaurants");
+    return res.json();
   };
-  async function loadRestaurantDetails(r: Restaurant) {
-    try {
-      const res = await fetch(`http://localhost:3000/restaurants/${r.id}`);
-      return await res.json();
-    } catch {
-      return r;
-    }
-  }
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser");
-      setLoading(false);
-      return;
-    }
 
+  const fetchRestaurantDetails = async (id: string) => {
+    const res = await fetch(`${API_URL}/restaurants/${id}`);
+    if (!res.ok) throw new Error("Failed to fetch restaurant details");
+    return res.json();
+  };
+
+  useEffect(() => {
+    if (!navigator.geolocation) return setError("Geolocation unsupported"), setLoading(false);
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+      async ({ coords: { latitude: lat, longitude: lng } }) => {
         setCurrentPosition({ lat, lng });
         try {
-          const res = await fetch(`http://localhost:3000/restaurants?lat=${lat}&lng=${lng}&radius=2000`);
-          const data = await res.json();
-          setRestaurants(data);
-        } catch (err) {
-          setError("Failed to fetch restaurants");
+          setRestaurants(await fetchRestaurants(lat, lng, filters.radius));
+        } catch (e) {
+          setError(e instanceof Error ? e.message : "Failed to fetch restaurants");
         } finally {
           setLoading(false);
         }
       },
-      () => {
-        setError("Unable to retrieve location");
-        setLoading(false);
-      }
+      () => { setError("Unable to retrieve location"); setLoading(false); }
     );
-  }, []);
+  }, [filters.radius]);
 
-  const handleRadiusChange = async (radius: number) => {
-    if (!currentPosition) return;
-
-    setLoading(true);
-    try {
-      await fetchRestaurantsByLocation(currentPosition.lat, currentPosition.lng, radius);
-    } catch {
-      setError("Failed to fetch restaurants");
-    }
-    setLoading(false);
-  };  
-
-  useEffect(() => {
-    let filtered = [...restaurants];
-    if (filters.priceFilter !== null) filtered = filtered.filter(r => r.price === filters.priceFilter);
-
-    filtered.sort((restaurantA, restaurantB) => {
-      if (filters.ratingSort === 'highest') return (restaurantB.rating || 0) - (restaurantA.rating || 0);
-      else return (restaurantA.rating || 0) - (restaurantB.rating || 0);
-    });
-    setFilteredRestaurants(filtered);
+  const filteredRestaurants = useMemo(() => {
+    const filtered = filters.priceFilter !== null ? restaurants.filter(r => r.price === filters.priceFilter) : restaurants;
+    return filtered.sort((a, b) => filters.ratingSort === 'highest' ? (b.rating ?? 0) - (a.rating ?? 0) : (a.rating ?? 0) - (b.rating ?? 0));
   }, [restaurants, filters]);
 
-  if (loading) return <p>Loading nearby restaurants...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="loading">Loading...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="container">
-      <div className="filters">
-        <FilterPanel
-          filters={filters}
-          onFiltersChange={setFilters}
-          onRadiusChange={handleRadiusChange}
-        />
+      <div className="filters"><FilterPanel filters={filters} onFiltersChange={setFilters} /></div>
+      <div className="list">
+        <h1>Nearby Restaurants</h1>
+        <RestaurantList restaurants={filteredRestaurants} hoveredRestaurant={hoveredRestaurant} onSelect={async (restaurant) => {
+          try {
+            const details = await fetchRestaurantDetails(restaurant.id);
+            setSelectedRestaurant(details);
+          } catch (error) {
+            setSelectedRestaurant(restaurant);
+          }
+        }} onHover={setHoveredRestaurant} />
+        {selectedRestaurant && <RestaurantModal restaurant={selectedRestaurant} onClose={() => setSelectedRestaurant(null)} />}
       </div>
-        <div className="list">
-          <h1>Nearby Restaurants</h1>
-          <RestaurantList
-            restaurants={filteredRestaurants}
-            hoveredRestaurant={hoveredRestaurant}
-            onSelect={async (r) => setSelectedRestaurant(await loadRestaurantDetails(r))}
-            onHover={setHoveredRestaurant}
-          />
-          {selectedRestaurant && (
-            <RestaurantModal
-              restaurant={selectedRestaurant}
-              onClose={() => setSelectedRestaurant(null)}
-            />
-          )}
-         </div>
-        <div className="map">
-          <Map
-            restaurants={filteredRestaurants}
-            currentPosition={currentPosition}
-            hoveredRestaurant={hoveredRestaurant}
-            onSelect={async (r) => setSelectedRestaurant(await loadRestaurantDetails(r))}
-            onHover={setHoveredRestaurant}
-          />
-      </div>
+      <div className="map"><Map restaurants={filteredRestaurants} currentPosition={currentPosition} hoveredRestaurant={hoveredRestaurant} onSelect={async (restaurant) => {
+        try {
+          const details = await fetchRestaurantDetails(restaurant.id);
+          setSelectedRestaurant(details);
+        } catch (error) {
+          setSelectedRestaurant(restaurant);
+        }
+      }} onHover={setHoveredRestaurant} /></div>
     </div>
   );
 }

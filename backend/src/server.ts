@@ -1,3 +1,19 @@
+/**
+ * Restaurant Discovery Backend Server
+ * 
+ * This is the main server file for the restaurant discovery application backend.
+ * It sets up a Fastify server with CORS enabled and registers restaurant routes.
+ * 
+ * Features:
+ * - RESTful API for restaurant data
+ * - Google Places API integration
+ * - CORS enabled for frontend communication
+ * - Environment variable configuration
+ * 
+ * @author Jingnan Hu
+ * @version 1.0.0
+ */
+
 import "dotenv/config";
 import Fastify from "fastify";
 import cors from "@fastify/cors";

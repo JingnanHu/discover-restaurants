@@ -83,6 +83,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding-bottom: 12px;
 }
 
 .restaurant-info p {
@@ -91,8 +92,10 @@
 
 .restaurant-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+
+.restaurant-header h3 {
+  flex: 1;
 }
 
 .restaurant-address {
@@ -135,12 +138,6 @@
   font-size: 20px;
 }
 
-.restaurant-rating {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
 .opening-hours h3 {
   margin: 12px 0 6px;
   font-size: 16px;
@@ -172,6 +169,56 @@
 .modal-footer button:hover {
   background: #155ab6;
 }
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 4px 8px 4px 0;
+  color: #1a73e8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: #e8f0fe;
+  border-color: #1a73e8;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.opening-hours {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e8eaed;
+}
+
+.opening-hours-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #5f6368;
+}
+
+.opening-hours-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #202124;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }

@@ -1,25 +1,56 @@
+/**
+ * Google Places API Service
+ * 
+ * This module handles all interactions with the Google Places API.
+ * It provides functions to fetch restaurant data and transform it into a consistent format.
+ * 
+ * Functions:
+ * - fetchRestaurants: Get nearby restaurants using the Places Nearby Search API
+ * - fetchRestaurantDetails: Get detailed restaurant information using the Places Details API
+ * - transformPlaceData: Transform Google Places API response into our standard format
+ * 
+ * API Endpoints Used:
+ * - Places Nearby Search: /nearbysearch/json
+ * - Places Details: /details/json
+ * - Places Photos: /photo
+ * 
+ * Required Environment Variables:
+ * - GOOGLE_API_KEY: Google Places API key
+ * 
+ * @author Jingnan Hu
+ * @version 1.0.0
+ */
+
 import axios from "axios";
 
 const BASE_URL = "https://maps.googleapis.com/maps/api/place";
 const apiKey = process.env.GOOGLE_API_KEY;
+if (!apiKey) throw new Error("Missing GOOGLE_API_KEY environment variable");
+
+function transformPlaceData(place: any, placeId?: string) {
+  return {
+    id: placeId || place.place_id,
+    name: place.name,
+    address: place.formatted_address || place.vicinity,
+    rating: place.rating,
+    price: place.price_level,
+    ratingNumber: place.user_ratings_total,
+    location: place.geometry?.location,
+    photo: place.photos?.length
+      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
+      : null,
+    phone: place.formatted_phone_number,
+    opening_hours: place.opening_hours?.weekday_text,
+    website: place.website,
+  };
+}
 
 export async function fetchRestaurants(lat: number, lng: number, radius = 2000) {
   const url = `${BASE_URL}/nearbysearch/json`;
   const params = { location: `${lat},${lng}`, radius, type: "restaurant", key: apiKey } as const;
   const response = await axios.get(url, { params });
   const results = response.data?.results ?? [];
-  return results.map((place: any) => ({
-    id: place.place_id,
-    name: place.name,
-    address: place.vicinity,
-    rating: place.rating ?? 0,
-    price: place.price_level ?? 0,
-    ratingNumber: place.user_ratings_total ?? 0,
-    location: place.geometry?.location,
-    photo: place.photos?.length
-      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
-      : null,
-  }));
+  return results.map((place: any) => transformPlaceData(place));
 }
 
 export async function fetchRestaurantDetails(placeId: string) {
@@ -28,24 +59,10 @@ export async function fetchRestaurantDetails(placeId: string) {
     place_id: placeId,
     key: apiKey,
     fields:
-      "place_id,name,rating,price_level,formatted_phone_number,formatted_address,opening_hours,website,photos,types,geometry",
+      "place_id,name,rating,price_level,formatted_phone_number,formatted_address,opening_hours,website,photos,geometry",
   } as const;
 
   const response = await axios.get(url, { params });
   const result = response.data?.result ?? {};
-  return {
-    id: placeId,
-    name: result.name,
-    rating: result.rating ?? 0,
-    phone: result.formatted_phone_number,
-    address: result.formatted_address,
-    opening_hours: result.opening_hours?.weekday_text,
-    website: result.website,
-    price: result.price_level ?? 0,
-    ratingNumber: result.user_ratings_total ?? 0,
-    location: result.geometry?.location,
-    photo: result.photos?.length
-      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${result.photos[0].photo_reference}&key=${apiKey}`
-      : null,
-  };
+  return transformPlaceData(result, placeId);
 }
