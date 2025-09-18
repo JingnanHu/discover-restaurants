@@ -31,6 +31,8 @@
  */
 
 import type { Restaurant } from "../types/restaurant";
+import { StarIcon } from "../icon";
+
 
 interface Props { restaurant: Restaurant; onSelect: (restaurant: Restaurant) => void; onHover: (restaurant: Restaurant | null) => void; isHovered: boolean }
 
@@ -47,11 +49,8 @@ export default function RestaurantItem({ restaurant, onSelect, onHover, isHovere
       <div className="restaurant-info">
         <div className="restaurant-header">
           <h3>{restaurant.name}</h3>
-          <span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffd700" style={{ margin: '0 4px', verticalAlign: 'middle' }}>
-              <polygon points="8,1 10,6 16,6 11,10 13,15 8,12 3,15 5,10 0,6 6,6" />
-            </svg>
-            {restaurant.rating ? restaurant.rating : 0}
+          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <StarIcon />{restaurant.rating ?? 0}
           </span>
         </div>
         <p className="restaurant-address">{priceLabels[restaurant.price ? restaurant.price : 0]}</p>

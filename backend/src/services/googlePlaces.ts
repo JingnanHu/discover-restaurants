@@ -27,6 +27,10 @@ const BASE_URL = "https://maps.googleapis.com/maps/api/place";
 const apiKey = process.env.GOOGLE_API_KEY;
 if (!apiKey) throw new Error("Missing GOOGLE_API_KEY environment variable");
 
+function generatePhotoUrl(photoReference: string, maxWidth = 400) {
+  return `${BASE_URL}/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${apiKey}`;
+}
+
 function transformPlaceData(place: any, placeId?: string) {
   return {
     id: placeId || place.place_id,
@@ -37,7 +41,7 @@ function transformPlaceData(place: any, placeId?: string) {
     ratingNumber: place.user_ratings_total,
     location: place.geometry?.location,
     photo: place.photos?.length
-      ? `${BASE_URL}/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
+      ? generatePhotoUrl(place.photos[0].photo_reference)
       : null,
     phone: place.formatted_phone_number,
     opening_hours: place.opening_hours?.weekday_text,

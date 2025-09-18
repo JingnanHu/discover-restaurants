@@ -17,7 +17,7 @@
  * - website: Restaurant website URL
  * - opening_hours: Array of opening hours strings
  * - location: Geographic coordinates (lat, lng)
- * - price: Price level (0-4, where 0 is unknown)
+ * - price: Price level (0-4)
  * - priceLabel: Human-readable price description
  * 
  * @author Jingnan Hu

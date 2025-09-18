@@ -41,5 +41,5 @@ export default memo(function RestaurantList({ restaurants, hoveredRestaurant, on
         <RestaurantItem key={restaurant.id} restaurant={restaurant} onSelect={onSelect} onHover={onHover} isHovered={hoveredRestaurant?.id === restaurant.id}/>
       ))}
     </ul>
-  ) : <p>No restaurants found</p>;
+  ) : <p style={{ textAlign: 'center' }}>No restaurants found</p>;
 });
