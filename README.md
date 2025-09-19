@@ -2,7 +2,7 @@
 
 A modern, full-stack restaurant discovery application that helps users find nearby restaurants using their current location. Built with React and Node.js, featuring interactive maps, real-time filtering, and detailed restaurant information.
 
-[![Demo Video](https://img.shields.io/badge/📹-Watch%20Demo-red?style=for-the-badge)](https://drive.google.com/file/d/11-cLzn34VB45yEmnsRjGDwFVbOIqsRPC/view?usp=drive_link)
+[![Demo Video](https://img.shields.io/badge/📹-Watch%20Demo-red?style=for-the-badge)](https://drive.google.com/file/d/1zuOGGJ9e2lYFO1E9Ngk3JEJiAcHZN8Vt/view?usp=drive_link)
 
 ## Features
 
@@ -94,7 +94,9 @@ cd discover-restaurants
 2. Create environment file:
 ```bash
 # Create .env file in the root directory
-echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
+cat > .env << EOF
+GOOGLE_API_KEY=your_google_api_key_here
+EOF
 ```
 
 3. Build and start the services:
@@ -144,25 +146,24 @@ docker run -p 8080:8080 discover-restaurants-frontend
 
 ## Environment Variables
 
-### Backend
+### Docker Deployment
+The following environment variables are required for Docker deployment:
+
+**Root `.env` file:**
+- `GOOGLE_API_KEY`: Your Google Places API key (required for both frontend and backend)
+
+### Local Development
+
+**Backend** (create `backend/.env`):
 - `GOOGLE_API_KEY`: Your Google Places API key
 
-### Frontend
-- `VITE_API_BASE`: Backend API base URL (default: http://localhost:3000)
-- `VITE_GOOGLE_API_KEY`: Your Google Places API key
+**Frontend** (create `frontend/.env`):
+- `VITE_API_URL`: Backend API base URL (default: http://localhost:3000)
 
 ## API Endpoints
 
-- `GET /`: Health check endpoint
 - `GET /restaurants`: Get restaurants (with query parameters for location, radius, etc.)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test your changes
-5. Submit a pull request
+- `GET /restaurants/Id`: Get a restaurant with details
 
 ## License
 
