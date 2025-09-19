@@ -31,18 +31,16 @@ function generatePhotoUrl(photoReference: string, maxWidth = 400) {
   return `${BASE_URL}/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${apiKey}`;
 }
 
-function transformPlaceData(place: any, placeId?: string) {
+function transformPlaceData(place: any) {
   return {
-    id: placeId || place.place_id,
+    id: place.place_id,
     name: place.name,
-    address: place.formatted_address || place.vicinity,
+    address: place.vicinity,
     rating: place.rating,
     price: place.price_level,
     ratingNumber: place.user_ratings_total,
     location: place.geometry?.location,
-    photo: place.photos?.length
-      ? generatePhotoUrl(place.photos[0].photo_reference)
-      : null,
+    photo: generatePhotoUrl(place.photos[0].photo_reference),
     phone: place.formatted_phone_number,
     opening_hours: place.opening_hours?.weekday_text,
     website: place.website,
@@ -63,10 +61,10 @@ export async function fetchRestaurantDetails(placeId: string) {
     place_id: placeId,
     key: apiKey,
     fields:
-      "place_id,name,rating,price_level,formatted_phone_number,formatted_address,opening_hours,website,photos,geometry",
+      "place_id,name,rating,price_level,formatted_phone_number,vicinity,opening_hours,website,photos,geometry",
   } as const;
 
   const response = await axios.get(url, { params });
   const result = response.data?.result ?? {};
-  return transformPlaceData(result, placeId);
+  return transformPlaceData(result);
 }

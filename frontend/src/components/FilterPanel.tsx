@@ -53,7 +53,7 @@ export default function FilterPanel({ filters, onFiltersChange }: FilterPanelPro
       </div>
       <div className="filter-group">
         <label htmlFor="priceFilter">Price Level:</label>
-        <select id="priceFilter" value={filters.priceFilter ?? ''} onChange={(event) => updateFilter('priceFilter', parseInt(event.target.value))}>
+        <select id="priceFilter" value={filters.priceFilter ?? ''} onChange={(event) => updateFilter('priceFilter', event.target.value === '' ? null : parseInt(event.target.value))}>
           <option value="">All Prices</option>
           <option value="0">Very Cheap</option>
           <option value="1">Inexpensive ($)</option>
