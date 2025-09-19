@@ -54,9 +54,9 @@ export default function Map({ restaurants, currentPosition, hoveredRestaurant, o
 
   return (
     <GoogleMap mapContainerStyle={mapContainerStyle} center={currentPosition} zoom={14}>
-      {restaurants.map((restaurant) => restaurant.location && (
+      {restaurants.map((restaurant, index) => restaurant.location && (
         <Marker
-          key={restaurant.id}
+          key={restaurant.id || `restaurant-${index}`}
           position={restaurant.location}
           onClick={_ => onSelect(restaurant)}
           onMouseOver={_ => onHover(restaurant)}

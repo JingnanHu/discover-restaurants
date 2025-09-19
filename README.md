@@ -1,19 +1,27 @@
-# Discover Restaurants
+# 🍽️ Discover Restaurants
 
-A full-stack application for discovering restaurants using Google Places API, built with React (frontend) and Node.js/Fastify (backend).
+A modern, full-stack restaurant discovery application that helps users find nearby restaurants using their current location. Built with React and Node.js, featuring interactive maps, real-time filtering, and detailed restaurant information.
+
+[![Demo Video](https://img.shields.io/badge/📹-Watch%20Demo-red?style=for-the-badge)](https://drive.google.com/file/d/11-cLzn34VB45yEmnsRjGDwFVbOIqsRPC/view?usp=drive_link)
 
 ## Features
 
-- Restaurant search and discovery
-- Interactive map integration
-- Restaurant filtering and details
-- Modern responsive UI
+### Frontend
+- **React 18** with TypeScript for type safety
+- **Vite** for fast development and building
+- **Google Maps API** for interactive maps
+- **CSS3** with modern styling and animations
 
-## Tech Stack
+### Backend
+- **Node.js** with TypeScript
+- **Fastify** for high-performance API server
+- **Axios** for HTTP requests
+- **Google Places API** for restaurant data
 
-- **Frontend**: React, TypeScript, Vite, Google Maps API
-- **Backend**: Node.js, Fastify, TypeScript
-- **APIs**: Google Places API
+### Infrastructure
+- **Docker** for containerization
+- **Docker Compose** for orchestration
+- **Environment-based configuration**
 
 ## Development Setup
 

@@ -12,6 +12,11 @@
  * - Real-time filter updates
  * - Optimized re-rendering with useCallback
  * 
+ * Note: "Unknown price" restaurants (where price is null/undefined) are not included
+ * as a filter option because they represent restaurants with missing price data
+ * rather than a distinct price category. These restaurants will be displayed
+ * with "Unknown price" text but cannot be filtered separately.
+ * 
  * Props:
  * - filters: Current filter state object
  * - onFiltersChange: Callback function to update filters
@@ -48,9 +53,9 @@ export default function FilterPanel({ filters, onFiltersChange }: FilterPanelPro
       </div>
       <div className="filter-group">
         <label htmlFor="priceFilter">Price Level:</label>
-        <select id="priceFilter" value={filters.priceFilter ?? ''} onChange={(event) => updateFilter('priceFilter', event.target.value === '' ? null : parseInt(event.target.value))}>
+        <select id="priceFilter" value={filters.priceFilter ?? ''} onChange={(event) => updateFilter('priceFilter', parseInt(event.target.value))}>
           <option value="">All Prices</option>
-          <option value="0">Unknown Price</option>
+          <option value="0">Very Cheap</option>
           <option value="1">Inexpensive ($)</option>
           <option value="2">Moderate ($$)</option>
           <option value="3">Expensive ($$$)</option>

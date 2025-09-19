@@ -49,7 +49,7 @@ export default function App() {
 
   const fetchRestaurants = async (lat: number, lng: number, radius: number) => {
     const res = await fetch(`${API_URL}/restaurants?lat=${lat}&lng=${lng}&radius=${radius}`);
-    if (!res.ok) throw new Error(res.status === 400 ? "Invalid location" : "Failed to fetch restaurants");
+    if (!res.ok) throw new Error("Failed to fetch restaurants");
     return res.json();
   };
 
@@ -66,19 +66,19 @@ export default function App() {
         setCurrentPosition({ lat, lng });
         try {
           setRestaurants(await fetchRestaurants(lat, lng, filters.radius));
-        } catch (e) {
-          setError(e instanceof Error ? e.message : "Failed to fetch restaurants");
+        } catch (error) {
+          setError(error instanceof Error ? error.message : "Failed to fetch restaurants");
         } finally {
           setLoading(false);
         }
       },
-      () => { setError("Unable to retrieve location"); setLoading(false); }
+      _ => { setError("Unable to retrieve location"); setLoading(false); }
     );
   }, [filters.radius]);
 
   const filteredRestaurants = useMemo(() => {
-    const filtered = filters.priceFilter !== null ? restaurants.filter(r => r.price === filters.priceFilter) : restaurants;
-    return filtered.sort((a, b) => filters.ratingSort === 'highest' ? (b.rating ?? 0) - (a.rating ?? 0) : (a.rating ?? 0) - (b.rating ?? 0));
+    const filtered = filters.priceFilter !== null ? restaurants.filter(restaurant => restaurant.price === filters.priceFilter) : restaurants;
+    return filtered.sort((restaurantA, restaurantB) => filters.ratingSort === 'highest' ? (restaurantB.rating ?? 0) - (restaurantA.rating ?? 0) : (restaurantA.rating ?? 0) - (restaurantB.rating ?? 0));
   }, [restaurants, filters]);
 
   if (loading) return <p className="loading">Loading...</p>;
@@ -94,7 +94,7 @@ export default function App() {
             const details = await fetchRestaurantDetails(restaurant.id);
             setSelectedRestaurant(details);
           } catch (error) {
-            setSelectedRestaurant(restaurant);
+            console.warn('Failed to fetch restaurant details:', error);
           }
         }} onHover={setHoveredRestaurant} />
         {selectedRestaurant && <RestaurantModal restaurant={selectedRestaurant} onClose={() => setSelectedRestaurant(null)} />}
@@ -104,6 +104,7 @@ export default function App() {
           const details = await fetchRestaurantDetails(restaurant.id);
           setSelectedRestaurant(details);
         } catch (error) {
+          console.warn('Failed to fetch restaurant details', error);
           setSelectedRestaurant(restaurant);
         }
       }} onHover={setHoveredRestaurant} /></div>

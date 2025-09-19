@@ -33,6 +33,7 @@ import { StarIcon, PhoneIcon, WebsiteIcon, ClockIcon } from "../icon";
 interface Props { restaurant: Restaurant; onClose: () => void }
 
 export default function RestaurantModal({ restaurant: restaurant, onClose }: Props) {
+  const priceLabels = ["Very Cheap", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
     window.addEventListener('keydown', handleEsc);
@@ -43,12 +44,12 @@ export default function RestaurantModal({ restaurant: restaurant, onClose }: Pro
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <div className="modal-body">
-          <h2>{restaurant.name}</h2>
-          <p className="restaurant-rating"><StarIcon /> {restaurant.rating ?? 'N/A'} {restaurant.priceLabel}</p>
+          <h2>{restaurant.name}</h2>      
+          <p className="restaurant-rating"><StarIcon /> {restaurant.rating} {restaurant.price !== undefined ? priceLabels[restaurant.price] : "Unknown price"}</p>
           <p className="restaurant-address">{restaurant.address}</p>
           {restaurant.photo && <div className="modal-header"><img src={restaurant.photo} alt={restaurant.name} className="restaurant-image" /></div>}
-          {restaurant.phone && <button className="action-button" onClick={() => window.open(`tel:${restaurant.phone}`, '_self')} aria-label={`Call ${restaurant.name}`}><PhoneIcon /> Call</button>}
-          {restaurant.website && <button className="action-button" onClick={() => window.open(restaurant.website, '_blank')} aria-label={`Visit ${restaurant.name} website`}><WebsiteIcon /> Website</button>}
+          {restaurant.phone && <button className="action-button" onClick={_ => window.open(`tel:${restaurant.phone}`, '_self')} aria-label={`Call ${restaurant.name}`}><PhoneIcon /> Call</button>}
+          {restaurant.website && <button className="action-button" onClick={_ => window.open(restaurant.website, '_blank')} aria-label={`Visit ${restaurant.name} website`}><WebsiteIcon /> Website</button>}
           {restaurant.opening_hours && (
             <div className="opening-hours">
               <div className="opening-hours-header"><ClockIcon /><h3>Opening Hours</h3></div>

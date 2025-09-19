@@ -37,7 +37,7 @@ import { StarIcon } from "../icon";
 interface Props { restaurant: Restaurant; onSelect: (restaurant: Restaurant) => void; onHover: (restaurant: Restaurant | null) => void; isHovered: boolean }
 
 export default function RestaurantItem({ restaurant, onSelect, onHover, isHovered }: Props) {
-  const priceLabels = ["Unknown Price", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
+  const priceLabels = ["Very Cheap", "Inexpensive ($)", "Moderate ($$)", "Expensive ($$$)", "Very Expensive ($$$$)"];
   return (
     <li
       className={`restaurant-item ${isHovered ? 'hovered' : ''}`}
@@ -53,7 +53,7 @@ export default function RestaurantItem({ restaurant, onSelect, onHover, isHovere
             <StarIcon />{restaurant.rating ?? 0}
           </span>
         </div>
-        <p className="restaurant-address">{priceLabels[restaurant.price ? restaurant.price : 0]}</p>
+        <p className="restaurant-price">{restaurant.price !== undefined ? priceLabels[restaurant.price] : "Unknown price"}</p>
         <p className="restaurant-address">{restaurant.address}</p>
       </div>
     </li>
