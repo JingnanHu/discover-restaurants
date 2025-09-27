@@ -2,7 +2,7 @@
 
 A modern, full-stack restaurant discovery application that helps users find nearby restaurants using their current location. Built with React and Node.js, featuring interactive maps, real-time filtering, and detailed restaurant information.
 
-[![Demo Video](https://img.shields.io/badge/📹-Watch%20Demo-red?style=for-the-badge)](https://drive.google.com/file/d/1zuOGGJ9e2lYFO1E9Ngk3JEJiAcHZN8Vt/view?usp=drive_link)
+![Demo Video](frontend/src/assets/Demo_Discover_Restuarant.gif)
 
 ## Features
 
